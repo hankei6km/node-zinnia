@@ -17,6 +17,7 @@ Recognizer::Recognizer() {};
 Recognizer::~Recognizer() {};
 
 Persistent<Function> Recognizer::constructor;
+Persistent<Function> rc = Persistent<Function>::New(FunctionTemplate::New(Result::NewInstance)->GetFunction());
 
 void Recognizer::Init() {
   // Prepare constructor template
@@ -82,7 +83,6 @@ Handle<Value> Recognizer::Classify(const Arguments& args) {
     zinnia::Result *result
       = obj->recognizer_->classify(*(c->character()), args[1]->NumberValue());
 
-    Persistent<Function> rc = Persistent<Function>::New(FunctionTemplate::New(Result::NewInstance)->GetFunction());
     const unsigned argc = 1;
     Handle<Value> argv[argc] = { External::New(result) };
     instance = rc->NewInstance(argc, argv);

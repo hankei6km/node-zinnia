@@ -12,7 +12,9 @@
 using namespace v8;
 
 Result::Result() {};
-Result::~Result() {};
+Result::~Result() {
+  delete result_;
+};
 
 Persistent<Function> Result::constructor;
 
