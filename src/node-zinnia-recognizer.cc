@@ -63,3 +63,19 @@ Handle<Value> Recognizer::Open(const Arguments& args) {
 
   return scope.Close(Boolean::New(ret));
 }
+
+Handle<Value> Recognizer::Classify(const Arguments& args) {
+  HandleScope scope;
+
+  bool ret = false;
+  if(args.Length()==1 && args[0]->IsString()){
+    Recognizer* obj = ObjectWrap::Unwrap<Recognizer>(args.This());
+
+    String::Utf8Value v8str(args[0]);
+    ret = obj->recognizer_->open(*v8str);
+  }else{
+    return ThrowException(Exception::Error(String::New("open argument require filename.")));
+  }
+
+  return scope.Close(Boolean::New(ret));
+}
