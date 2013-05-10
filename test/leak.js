@@ -1,4 +1,4 @@
-var zinnia = require('./build/Release/zinnia.node');
+var zinnia = require('../index');
 
 var r = zinnia.Recognizer();
 var s = zinnia.Character();
