@@ -10,7 +10,8 @@
       'src/'
     ],
     'sources': [
-      'src/node-zinnia.cc'
+      'src/node-zinnia.cc',
+      'src/node-zinnia-recognizer.cc'
     ]
   },
   'targets': [
