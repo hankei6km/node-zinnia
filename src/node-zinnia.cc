@@ -22,7 +22,7 @@ void Recognizer::Init() {
   tpl->InstanceTemplate()->SetInternalFieldCount(1);
   // Prototype
   tpl->PrototypeTemplate()->Set(String::NewSymbol("open"),
-      FunctionTemplate::New(RecognizerOpen)->GetFunction());
+      FunctionTemplate::New(Open)->GetFunction());
 
   constructor = Persistent<Function>::New(tpl->GetFunction());
 }
@@ -31,7 +31,6 @@ Handle<Value> Recognizer::New(const Arguments& args) {
   HandleScope scope;
 
   Recognizer* obj = new Recognizer();
-  //obj->counter_ = args[0]->IsUndefined() ? 0 : args[0]->NumberValue();
   obj->recognizer_ = zinnia::Recognizer::create();
   obj->Wrap(args.This());
 
@@ -48,11 +47,20 @@ Handle<Value> Recognizer::NewInstance(const Arguments& args) {
   return scope.Close(instance);
 }
 
-Handle<Value> Recognizer::RecognizerOpen(const Arguments& args) {
+Handle<Value> Recognizer::Open(const Arguments& args) {
   HandleScope scope;
 
+  bool ret = false;
+  if(args.Length()==1 && args[0]->IsString()){
+    Recognizer* obj = ObjectWrap::Unwrap<Recognizer>(args.This());
 
-  return scope.Close(Undefined());
+    String::Utf8Value v8str(args[0]);
+    ret = obj->recognizer_->open(*v8str);
+  }else{
+    return ThrowException(Exception::Error(String::New("open argument require filename.")));
+  }
+
+  return scope.Close(Boolean::New(ret));
 }
 
 Handle<Value> GetRecognizer(const Arguments& args) {
