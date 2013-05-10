@@ -14,7 +14,10 @@ class Character : public node::ObjectWrap {
  public:
   static void Init();
   static v8::Handle<v8::Value> NewInstance(const v8::Arguments& args);
+  static v8::Handle<v8::Value> SetWidth(const v8::Arguments& args);
+  static v8::Handle<v8::Value> SetHeight(const v8::Arguments& args);
   static v8::Handle<v8::Value> Clear(const v8::Arguments& args);
+  static v8::Handle<v8::Value> Add(const v8::Arguments& args);
 
  private:
   Character();
