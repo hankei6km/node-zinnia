@@ -13,13 +13,14 @@
 
 using namespace v8;
 
+static Persistent<Function> result_constructor = Persistent<Function>::New(FunctionTemplate::New(Result::NewInstance)->GetFunction());
+
 Recognizer::Recognizer() {};
 Recognizer::~Recognizer() {
   delete recognizer_;
 };
 
 Persistent<Function> Recognizer::constructor;
-Persistent<Function> rc = Persistent<Function>::New(FunctionTemplate::New(Result::NewInstance)->GetFunction());
 
 void Recognizer::Init() {
   // Prepare constructor template
@@ -87,7 +88,7 @@ Handle<Value> Recognizer::Classify(const Arguments& args) {
 
     const unsigned argc = 1;
     Handle<Value> argv[argc] = { External::New(result) };
-    instance = rc->NewInstance(argc, argv);
+    instance = result_constructor->NewInstance(argc, argv);
   }else{
     return ThrowException(
         Exception::Error(String::New("classify argument require character, nbest.")));
