@@ -15,6 +15,8 @@ class Result : public node::ObjectWrap {
   static void Init();
   static v8::Handle<v8::Value> NewInstance(const v8::Arguments& args);
   static v8::Handle<v8::Value> Size(const v8::Arguments& args);
+  static v8::Handle<v8::Value> GetValue(const v8::Arguments& args);
+  static v8::Handle<v8::Value> Score(const v8::Arguments& args);
 
  private:
   Result();

@@ -22,6 +22,10 @@ void Result::Init() {
   tpl->SetClassName(String::NewSymbol("Result"));
   tpl->InstanceTemplate()->SetInternalFieldCount(1);
   // Prototype
+  tpl->PrototypeTemplate()->Set(String::NewSymbol("value"),
+      FunctionTemplate::New(GetValue)->GetFunction());
+  tpl->PrototypeTemplate()->Set(String::NewSymbol("score"),
+      FunctionTemplate::New(Score)->GetFunction());
   tpl->PrototypeTemplate()->Set(String::NewSymbol("size"),
       FunctionTemplate::New(Size)->GetFunction());
 
@@ -46,6 +50,38 @@ Handle<Value> Result::NewInstance(const Arguments& args) {
   Local<Object> instance = constructor->NewInstance(argc, argv);
 
   return scope.Close(instance);
+}
+
+Handle<Value> Result::GetValue(const Arguments& args) {
+  HandleScope scope;
+
+  const char* ret = NULL;
+  if(args.Length()==1 && args[0]->IsNumber()){
+    Result* obj = ObjectWrap::Unwrap<Result>(args.This());
+
+    ret = obj->result_->value(args[0]->NumberValue());
+  }else{
+    return ThrowException(
+        Exception::Error(String::New("value argument require index.")));
+  }
+
+  return scope.Close(String::New(ret));
+}
+
+Handle<Value> Result::Score(const Arguments& args) {
+  HandleScope scope;
+
+  float ret = 0;
+  if(args.Length()==1 && args[0]->IsNumber()){
+    Result* obj = ObjectWrap::Unwrap<Result>(args.This());
+
+    ret = obj->result_->score(args[0]->NumberValue());
+  }else{
+    return ThrowException(
+        Exception::Error(String::New("score argument require index.")));
+  }
+
+  return scope.Close(Number::New(ret));
 }
 
 Handle<Value> Result::Size(const Arguments& args) {
