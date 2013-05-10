@@ -11,6 +11,7 @@
     ],
     'sources': [
       'src/node-zinnia.cc',
+      'src/node-zinnia-character.cc',
       'src/node-zinnia-recognizer.cc',
       'src/node-zinnia-result.cc'
     ]
