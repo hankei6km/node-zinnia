@@ -18,6 +18,7 @@ class Character : public node::ObjectWrap {
   static v8::Handle<v8::Value> SetHeight(const v8::Arguments& args);
   static v8::Handle<v8::Value> Clear(const v8::Arguments& args);
   static v8::Handle<v8::Value> Add(const v8::Arguments& args);
+  zinnia::Character* character() const { return character_; }
 
  private:
   Character();

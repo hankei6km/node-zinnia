@@ -22,7 +22,7 @@ void Result::Init() {
   tpl->SetClassName(String::NewSymbol("Result"));
   tpl->InstanceTemplate()->SetInternalFieldCount(1);
   // Prototype
-  tpl->PrototypeTemplate()->Set(String::NewSymbol("open"),
+  tpl->PrototypeTemplate()->Set(String::NewSymbol("size"),
       FunctionTemplate::New(Size)->GetFunction());
 
   constructor = Persistent<Function>::New(tpl->GetFunction());
@@ -32,6 +32,7 @@ Handle<Value> Result::New(const Arguments& args) {
   HandleScope scope;
 
   Result* obj = new Result();
+  obj->result_ = static_cast<zinnia::Result*>(External::Unwrap(args[0]));
   obj->Wrap(args.This());
 
   return args.This();

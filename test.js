@@ -26,6 +26,10 @@ if(r.open('/usr/lib/zinnia/model/tomoe/handwriting-ja.model')){
   s.add(7, 189, 227)
   s.add(8, 111, 257)
   s.add(8, 189, 245)
+
+  var result = r.classify(s, 10);
+  console.log(result.size());
+
 }else{
   console.log('model can\'t open');
 }
