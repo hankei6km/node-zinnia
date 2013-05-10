@@ -21,10 +21,6 @@ Handle<Value> GetRecognizer(const Arguments& args) {
   HandleScope scope;
   return scope.Close(Recognizer::NewInstance(args));
 }
-Handle<Value> GetResult(const Arguments& args) {
-  HandleScope scope;
-  return scope.Close(Result::NewInstance(args));
-}
 
 void InitAll(Handle<Object> exports) {
   Character::Init();
@@ -35,8 +31,6 @@ void InitAll(Handle<Object> exports) {
       FunctionTemplate::New(GetCharacter)->GetFunction());
   exports->Set(String::NewSymbol("Recognizer"),
       FunctionTemplate::New(GetRecognizer)->GetFunction());
-  exports->Set(String::NewSymbol("Result"),
-      FunctionTemplate::New(GetResult)->GetFunction());
 }
 
 NODE_MODULE(zinnia, InitAll)
