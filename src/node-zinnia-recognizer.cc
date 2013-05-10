@@ -14,7 +14,9 @@
 using namespace v8;
 
 Recognizer::Recognizer() {};
-Recognizer::~Recognizer() {};
+Recognizer::~Recognizer() {
+  delete recognizer_;
+};
 
 Persistent<Function> Recognizer::constructor;
 Persistent<Function> rc = Persistent<Function>::New(FunctionTemplate::New(Result::NewInstance)->GetFunction());

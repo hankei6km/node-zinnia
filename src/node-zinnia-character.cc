@@ -12,7 +12,9 @@
 using namespace v8;
 
 Character::Character() {};
-Character::~Character() {};
+Character::~Character() {
+  delete character_;
+};
 
 Persistent<Function> Character::constructor;
 
