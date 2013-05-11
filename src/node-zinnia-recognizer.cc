@@ -30,8 +30,8 @@ void Recognizer::Init() {
   // Prototype
   tpl->PrototypeTemplate()->Set(String::NewSymbol("open"),
       FunctionTemplate::New(Open)->GetFunction());
-  tpl->PrototypeTemplate()->Set(String::NewSymbol("classify"),
-      FunctionTemplate::New(Classify)->GetFunction());
+  tpl->PrototypeTemplate()->Set(String::NewSymbol("classifySync"),
+      FunctionTemplate::New(ClassifySync)->GetFunction());
 
   constructor = Persistent<Function>::New(tpl->GetFunction());
 }
@@ -73,7 +73,7 @@ Handle<Value> Recognizer::Open(const Arguments& args) {
   return scope.Close(Boolean::New(ret));
 }
 
-Handle<Value> Recognizer::Classify(const Arguments& args) {
+Handle<Value> Recognizer::ClassifySync(const Arguments& args) {
   HandleScope scope;
 
   Local<Object> instance;

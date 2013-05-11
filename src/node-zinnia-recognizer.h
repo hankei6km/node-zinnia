@@ -15,7 +15,7 @@ class Recognizer : public node::ObjectWrap {
   static void Init();
   static v8::Handle<v8::Value> NewInstance(const v8::Arguments& args);
   static v8::Handle<v8::Value> Open(const v8::Arguments& args);
-  static v8::Handle<v8::Value> Classify(const v8::Arguments& args);
+  static v8::Handle<v8::Value> ClassifySync(const v8::Arguments& args);
 
  private:
   Recognizer();
