@@ -4,6 +4,7 @@ var r = zinnia.Recognizer();
 var s = zinnia.Character();
 
 if(r.open('/usr/lib/zinnia/model/tomoe/handwriting-ja.model')){
+  s.clear(300);
   s.set_width(300);
   s.set_height(300);
 

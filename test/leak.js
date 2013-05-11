@@ -7,6 +7,7 @@ if(r.open('/usr/lib/zinnia/model/tomoe/handwriting-ja.model')){
 
   var f = function(){
     for(var cnt=0; cnt<100; cnt++){
+      s.clear(300);
       s.set_width(300);
       s.set_height(300);
 
