@@ -4,6 +4,7 @@
  * @author hankei6km
  */
 #include <node.h>
+#include <uv.h>
 #include <v8.h>
 #include <zinnia.h>
 #include "node-zinnia.h"
@@ -14,6 +15,18 @@
 using namespace v8;
 
 static Persistent<Function> result_constructor = Persistent<Function>::New(FunctionTemplate::New(Result::NewInstance)->GetFunction());
+
+// http://kkaefer.github.io/node-cpp-modules/
+struct Baton {
+  uv_work_t request;
+  Persistent<Function> callback;
+
+  // Custom data
+  zinnia::Recognizer *recognizer;
+  zinnia::Character *character;
+  size_t nbest;
+  zinnia::Result *result;
+};
 
 Recognizer::Recognizer() {};
 Recognizer::~Recognizer() {
@@ -30,6 +43,8 @@ void Recognizer::Init() {
   // Prototype
   tpl->PrototypeTemplate()->Set(String::NewSymbol("open"),
       FunctionTemplate::New(Open)->GetFunction());
+  tpl->PrototypeTemplate()->Set(String::NewSymbol("classify"),
+      FunctionTemplate::New(Classify)->GetFunction());
   tpl->PrototypeTemplate()->Set(String::NewSymbol("classifySync"),
       FunctionTemplate::New(ClassifySync)->GetFunction());
 
@@ -71,6 +86,57 @@ Handle<Value> Recognizer::Open(const Arguments& args) {
   }
 
   return scope.Close(Boolean::New(ret));
+}
+
+void AsyncWork(uv_work_t* req) {
+  Baton* baton = static_cast<Baton*>(req->data);
+
+  baton->result = baton->recognizer->classify(*(baton->character), baton->nbest);
+}
+
+void AsyncAfter(uv_work_t* req, int status) {
+  HandleScope scope;
+  Baton* baton = static_cast<Baton*>(req->data);
+
+  const unsigned argc = 1;
+  Handle<Value> argv[argc] = { External::New(baton->result) };
+  Local<Object> instance = result_constructor->NewInstance(argc, argv);
+
+  const unsigned argc_cb = 1;
+  Local<Value> argv_cb[argc_cb] = { instance };
+  baton->callback->Call(Context::GetCurrent()->Global(), argc_cb, argv_cb);
+
+  baton->callback.Dispose();
+  delete baton;
+}
+
+Handle<Value> Recognizer::Classify(const Arguments& args) {
+  HandleScope scope;
+
+  if(args.Length()==3 && args[0]->IsObject() && args[1]->IsNumber() && args[2]->IsFunction()){
+    Recognizer* obj = ObjectWrap::Unwrap<Recognizer>(args.This());
+
+    Character* c = node::ObjectWrap::Unwrap<Character>(
+      args[0]->ToObject());
+
+    Local<Function> callback = Local<Function>::Cast(args[2]);
+
+    Baton* baton = new Baton();
+    baton->request.data = baton;
+    baton->recognizer = obj->recognizer_;
+    baton->character = c->character();
+    baton->nbest = args[1]->NumberValue();
+    baton->callback = Persistent<Function>::New(callback);
+
+    uv_queue_work(uv_default_loop(), &baton->request,
+        AsyncWork, AsyncAfter);
+
+  }else{
+    return ThrowException(
+        Exception::Error(String::New("classify argument require character, nbest, callback.")));
+  }
+
+  return scope.Close(Undefined());
 }
 
 Handle<Value> Recognizer::ClassifySync(const Arguments& args) {

@@ -1,49 +1,53 @@
 var zinnia = require('../index');
 
 var r = zinnia.Recognizer();
-var s = zinnia.Character();
 
 if(r.open('/usr/lib/zinnia/model/tomoe/handwriting-ja.model')){
 
+  var cnt = 0;
   var f = function(){
-    for(var cnt=0; cnt<100; cnt++){
-      s.clear(300);
-      s.set_width(300);
-      s.set_height(300);
+    var s = zinnia.Character();
+    s.clear(300);
+    s.set_width(300);
+    s.set_height(300);
 
-      s.add(0, 51, 29)
-      s.add(0, 117, 41)
-      s.add(1, 99, 65)
-      s.add(1, 219, 77)
-      s.add(2, 27, 131)
-      s.add(2, 261, 131)
-      s.add(3, 129, 17)
-      s.add(3, 57, 203)
-      s.add(4, 111, 71)
-      s.add(4, 219, 173)
-      s.add(5, 81, 161)
-      s.add(5, 93, 281)
-      s.add(6, 99, 167)
-      s.add(6, 207, 167)
-      s.add(6, 189, 245)
-      s.add(7, 99, 227)
-      s.add(7, 189, 227)
-      s.add(8, 111, 257)
-      s.add(8, 189, 245)
+    s.add(0, 51, 29)
+    s.add(0, 117, 41)
+    s.add(1, 99, 65)
+    s.add(1, 219, 77)
+    s.add(2, 27, 131)
+    s.add(2, 261, 131)
+    s.add(3, 129, 17)
+    s.add(3, 57, 203)
+    s.add(4, 111, 71)
+    s.add(4, 219, 173)
+    s.add(5, 81, 161)
+    s.add(5, 93, 281)
+    s.add(6, 99, 167)
+    s.add(6, 207, 167)
+    s.add(6, 189, 245)
+    s.add(7, 99, 227)
+    s.add(7, 189, 227)
+    s.add(8, 111, 257)
+    s.add(8, 189, 245)
 
-      var result = r.classifySync(s, 10);
+    r.classify(s, 10, function(result){
       var size = result.size();
       for(var i=0; i<size; i++){
         //console.log(result.value(i) + ' ' + result.score(i));
       }
       result = null;
       size = null;
-    }
-    console.log('--');
-    gc();
-    setTimeout(f, 1000);
+      if(cnt > 100){
+        console.log('--');
+        gc();
+        cnt = 0;
+      }
+      cnt++;
+      process.nextTick(f);
+    });
   }
-  setTimeout(f, 1000);
+  f();
 
 }else{
   console.log('model can\'t open');
