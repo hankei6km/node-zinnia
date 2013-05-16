@@ -94,7 +94,7 @@ void AsyncWork(uv_work_t* req) {
   baton->result = baton->recognizer->classify(*(baton->character), baton->nbest);
 }
 
-void AsyncAfter(uv_work_t* req, int status) {
+void AsyncAfter(uv_work_t* req) {
   HandleScope scope;
   Baton* baton = static_cast<Baton*>(req->data);
 
@@ -108,6 +108,10 @@ void AsyncAfter(uv_work_t* req, int status) {
 
   baton->callback.Dispose();
   delete baton;
+}
+
+void AsyncAfter(uv_work_t* req, int status) {
+  AsyncAfter(req);
 }
 
 Handle<Value> Recognizer::Classify(const Arguments& args) {
