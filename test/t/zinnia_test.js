@@ -129,7 +129,8 @@ QUnit.asyncTest('classify', function() {
     for(var idx=0; idx<size; idx++){
       assert.equal(result.value(idx), tbl[idx].value,
                    'result.value(' + idx + ')');
-      assert.equal(result.score(idx), tbl[idx].score,
+      assert.equal(Math.round(result.score(idx)*10)/10, 
+                   Math.round(tbl[idx].score*10)/10,
                    'result.score(' + idx + ')');
     }
     doneFunc();
@@ -140,8 +141,9 @@ QUnit.asyncTest('classify', function() {
     assert.equal(size, 1, 'result.size() nbest=1');
     assert.equal(result.value(0), tbl[0].value,
                  'result.value(0)');
-    assert.equal(result.score(0), tbl[0].score,
-                 'result.score(0)');
+    assert.equal(Math.round(result.score(0)*10)/10, 
+                 Math.round(tbl[0].score*10)/10,
+                 'result.score(' + idx + ')');
     doneFunc();
   });
 
@@ -160,8 +162,9 @@ QUnit.asyncTest('classify', function() {
   for(var idx=0; idx<size; idx++){
     assert.equal(result.value(idx), tbl[idx].value,
                  'result.value(' + idx + ') (Sync)');
-    assert.equal(result.score(idx), tbl[idx].score,
-                 'result.score(' + idx + ') (Sync)');
+    assert.equal(Math.round(result.score(idx)*10)/10, 
+                 Math.round(tbl[idx].score*10)/10,
+                 'result.score(' + idx + ')');
   }
 
 })
